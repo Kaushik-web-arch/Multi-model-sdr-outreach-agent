@@ -1,0 +1,15 @@
+[project]
+name = "sdr-agent-kaushik"
+version = "0.2.0"
+description = "Dual-provider multi-agent SDR outreach workspace"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "gradio>=6.0,<7",
+    "python-dotenv>=1.0,<2",
+    "openai-agents>=0.2,<1",
+    "pytest>=8,<9",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
