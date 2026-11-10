@@ -58,3 +58,26 @@ Create a `.env` file from `.env.example` before using live models or email deliv
 ## Future Scope
 
 This can later be expanded with bulk prospect imports, CRM integration, approval queues, follow-up agents, campaign tracking, and analytics.
+
+## Demo mode and live mode
+
+This is a **multi-model text workflow**, not a multimodal image/audio application.
+
+| Mode | Behavior |
+| --- | --- |
+| Demo (default) | Builds three predefined email templates without API requests and always selects the consultative draft. |
+| Live | Runs three writing agents concurrently: Professional and Creative use Gemini; Consultative uses Groq. A Groq manager selects a candidate. |
+| Delivery (disabled by default) | A separate UI action sends the edited draft through SMTP only when sending is enabled and credentials are configured. |
+
+The implementation is in [src/pipeline.py](src/pipeline.py), configuration in [src/settings.py](src/settings.py), and delivery in [src/email_sender.py](src/email_sender.py). If the manager's selection is not recognized, the pipeline falls back to the first draft; selection is not a measured quality guarantee.
+
+### Configuration and verification
+
+Copy `.env.example` to `.env`. Keep `DEMO_MODE=true` and `ALLOW_EMAIL_SEND=false` for the initial walkthrough. Enter a fictional prospect, generate drafts, inspect their Demo labels and edit the selected draft.
+
+For live generation, set `DEMO_MODE=false` and configure both `GEMINI_API_KEY` and `GROQ_API_KEY`. Model names are configurable through `GEMINI_MODEL` and `GROQ_MODEL`; access must be verified with the provider. Keep sending disabled while checking generation.
+
+Delivery requires `ALLOW_EMAIL_SEND=true`, `SMTP_USER` and `SMTP_PASSWORD`; `SMTP_HOST`, `SMTP_PORT` and `SMTP_FROM` control the destination server and sender configuration. Enabling delivery can send real email. Use an address you control for an explicit delivery test.
+
+The current tests cover demo output, dry-run behavior and missing live credentials. They do not prove successful live generation, email delivery or improved response rates. Record those results separately with the commit, configuration (without secrets), date and observed outcome.
+
